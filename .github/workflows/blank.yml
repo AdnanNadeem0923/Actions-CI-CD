@@ -1,0 +1,10 @@
+name: First-Workflow   #name of the workflow
+on: workflow_dispatch   # the event trigger, in this case manually
+jobs:
+  demo-job:             #name of the job can be anhything as you desire
+    runs-on: ubuntu-latest    #runner, it means the machine or env you want this job to execute
+    steps:
+      - name: print greeting
+        run: echo "Hello World!"
+      - name: print goodbye
+        run: echo "okay goodbye"
