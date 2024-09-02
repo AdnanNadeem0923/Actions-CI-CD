@@ -1,44 +1,68 @@
+# Name of the workflow
 name: Deploy website
+
+# Trigger the workflow on push events to the 'main' branch
 on:
   push:
     branches:
       - main
+
 jobs:
+  # Job to run tests
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Specifies the type of runner to use (Ubuntu in this case)
     steps:
       - name: Get code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Checks out the repository code
       - name: Install dependencies
-        run: npm ci
+        run: npm ci  # Installs the dependencies specified in package-lock.json
       - name: Test code
-        run: npm run test
+        run: npm run test  # Runs the tests specified in package.json
+
+  # Job to build the project
   build:
-    needs: test
-    runs-on: ubuntu-latest
+    needs: test  # Specifies that this job depends on the successful completion of the 'test' job
+    runs-on: ubuntu-latest  # Specifies the type of runner to use (Ubuntu in this case)
+    outputs:
+      js-fileName: ${{ steps.publish.outputs.js-fileName }}  # Exposes an output variable from this job
+
     steps:
       - name: Get code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Checks out the repository code again (necessary for this job)
       - name: Install dependencies
-        run: npm ci
+        run: npm ci  # Installs the dependencies specified in package-lock.json
       - name: Build website
-        run: npm run build
+        run: npm run build  # Builds the project and creates necessary files in the 'dist' directory
+      - name: Publish file name  
+        id: publish  # Assigns an ID to this step for reference in the outputs
+        run: find dist/assets/*.js -type f -execdir echo 'js-fileName={}' >> $GITHUB_OUTPUT ';'  
+        # Finds JavaScript files in 'dist/assets' and writes their names to the GitHub Actions output file
+
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  # Action to upload artifacts
         with:
-          name: dist-folder
+          name: dist-folder  # Name of the artifact
           path: |
-            dist
-            package.json   
+            dist           # Directory to be uploaded as an artifact
+            package.json   # Additional file to be included in the artifact
+
+  # Job to deploy the project
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
+    needs: build  # Specifies that this job depends on the successful completion of the 'build' job
+    runs-on: ubuntu-latest  # Specifies the type of runner to use (Ubuntu in this case)
     steps:
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4  # Action to download artifacts from previous jobs
         with:
-          name: dist-folder  
+          name: dist-folder  # Name of the artifact to download
+
       - name: Output
-        run: ls
+        run: ls  # Lists the files in the current directory (useful for debugging)
+
+      - name: Output Filename
+        run: echo "${{needs.build.outputs.js-fileName}}"
+        # Outputs the JavaScript file name that was captured from the 'build' job.
+        # This ensures that the correct file name is passed from the build stage to the deploy stage.
+
       - name: Deploy
-        run: echo "Deploying..."
+        run: echo "Deploying..."  # Placeholder command to simulate deployment
