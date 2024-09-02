@@ -43,8 +43,8 @@ jobs:
         with:
           name: dist-folder  # Name of the artifact
           path: |
-            dist           # Directory to be uploaded as an artifact
-            package.json   # Additional file to be included in the artifact
+            dist           
+            package.json  
 
   # Job to deploy the project
   deploy:
