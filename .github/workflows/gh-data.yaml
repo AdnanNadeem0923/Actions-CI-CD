@@ -17,7 +17,7 @@ jobs:
       
       - name: Get npm cache directory
         id: npm-cache-dir  # ID used to reference the output of this step in later steps
-        run: echo "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}  # Retrieves the npm cache directory and sets it as an output variable
+        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT  # Retrieves the npm cache directory and sets it as an output variable
       
       - uses: actions/cache@v4
         id: npm-cache  # ID used to reference the cache step for checking cache hit status
@@ -50,7 +50,7 @@ jobs:
       
       - name: Get npm cache directory
         id: npm-cache-dir-build  # ID used to reference the output of this step in later steps
-        run: echo "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}  # Retrieves the npm cache directory and sets it as an output variable
+        run: echo "dir=$(npm config get cache)" >>  $GITHUB_OUTPUT  # Retrieves the npm cache directory and sets it as an output variable
       
       - uses: actions/cache@v4
         id: npm-cache-build  # ID used to reference the cache step for checking cache hit status
