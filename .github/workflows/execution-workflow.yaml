@@ -60,3 +60,12 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  
+  report:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: dummy-report  
+        run: | 
+          echo "something wnet wrong"
+          echo "${{github}}"      
