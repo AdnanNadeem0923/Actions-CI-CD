@@ -69,4 +69,4 @@ jobs:
       - name: dummy-report  
         run: | 
           echo "something wnet wrong"
-          echo "${{github}}"      
+          echo "${{toJson(github)}}"      
