@@ -1,0 +1,18 @@
+name: matrix
+on: push
+jobs:
+  build:
+    matrix:
+      strategy:
+        node-modules: [12,14,16]
+        operating-system: [ubuntu-latest, windows-latest]
+    runs-on: ${{matrix.operating-system}}
+    steps:
+      - name: get code
+        uses: actions/checkout@v4
+      - name: install node  
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{matrix.node-modules}}
+      - name: install dependencies
+        uses: npm ci    
