@@ -2,17 +2,19 @@ name: matrix
 on: push
 jobs:
   build:
-    matrix:
-      strategy:
-        node-modules: [12,14,16]
+    strategy:
+      matrix:
+        node-version: [12, 14, 16]
         operating-system: [ubuntu-latest, windows-latest]
-    runs-on: ${{matrix.operating-system}}
+    runs-on: ${{ matrix.operating-system }}
     steps:
-      - name: get code
+      - name: Checkout code
         uses: actions/checkout@v4
-      - name: install node  
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{matrix.node-modules}}
-      - name: install dependencies
-        uses: npm ci    
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
